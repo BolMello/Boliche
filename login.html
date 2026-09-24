@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrar · Boliche PMFC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-auth="pending">
+  <main class="login">
+    <div class="login__card">
+      <div class="login__brand">
+        <span class="login__logo"><svg class="icon"><use href="#i-zap"/></svg></span>
+        <h1 class="login__title">Boliche PMFC</h1>
+        <p class="login__subtitle">Acesso restrito a usuários cadastrados</p>
+      </div>
+
+      <form class="login__form" id="login-form">
+        <label class="field">
+          <span>E-mail</span>
+          <input type="email" name="email" required autocomplete="username" autofocus />
+        </label>
+        <label class="field">
+          <span>Senha</span>
+          <input type="password" name="password" required autocomplete="current-password" />
+        </label>
+        <p class="form-error" hidden></p>
+        <button type="submit" class="btn btn--primary btn--block"><svg class="icon"><use href="#i-log-in"/></svg>Entrar</button>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="js/login.js"></script>
+</body>
+</html>

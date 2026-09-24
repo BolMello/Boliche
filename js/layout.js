@@ -31,35 +31,11 @@ const NAV = [
   { id: 'ranking', label: 'Ranking', href: '#', icon: 'medal' },
 ];
 
-const LOGIN_DIALOG = `
-<dialog class="modal" id="login-dialog" aria-labelledby="login-title">
-  <form class="modal__form" id="login-form">
-    <div class="modal__head">
-      <h2 class="modal__title" id="login-title">Entrar</h2>
-      <button type="button" class="icon-btn" data-close aria-label="Fechar"><svg class="icon"><use href="#i-x"/></svg></button>
-    </div>
-    <label class="field"><span>E-mail</span><input type="email" name="email" required autocomplete="username" /></label>
-    <label class="field"><span>Senha</span><input type="password" name="password" required autocomplete="current-password" /></label>
-    <p class="form-error" hidden></p>
-    <div class="modal__actions">
-      <button type="button" class="btn btn--ghost" data-close>Cancelar</button>
-      <button type="submit" class="btn btn--primary"><svg class="icon"><use href="#i-log-in"/></svg>Entrar</button>
-    </div>
-  </form>
-</dialog>`;
+// Páginas liberadas como destino após o login (evita redirecionar para fora do app).
+const PAGINA_VALIDA = /^[\w-]+\.html$/;
 
-let currentUser = null;
-let loginDialog = null;
-const listeners = new Set();
-
-// Registra uma função chamada sempre que o usuário logado mudar.
-export function onAuthChange(fn) {
-  listeners.add(fn);
-  fn(currentUser);
-}
-
-export function openLogin() {
-  loginDialog.showModal();
+export function insertIcons() {
+  document.body.insertAdjacentHTML('afterbegin', SPRITE);
 }
 
 // Fecha o popup pelos botões [data-close] ou clicando fora dele,
@@ -83,28 +59,35 @@ export function showFormError(form, message) {
   p.hidden = false;
 }
 
-function renderAuth() {
-  const area = document.getElementById('auth-area');
-  if (currentUser) {
-    area.innerHTML = `
-      <span class="auth__email"></span>
-      <button type="button" class="btn btn--ghost btn--sm"><svg class="icon"><use href="#i-log-out"/></svg>Sair</button>`;
-    area.querySelector('.auth__email').textContent = currentUser.email;
-    area.querySelector('button').addEventListener('click', () => supabase.auth.signOut());
-  } else {
-    area.innerHTML = `
-      <button type="button" class="btn btn--ghost btn--sm"><svg class="icon"><use href="#i-log-in"/></svg>Entrar</button>`;
-    area.querySelector('button').addEventListener('click', openLogin);
-  }
+// Página de destino depois do login (?next=pagina.html), padrão index.html.
+export function paginaDestino() {
+  const next = new URLSearchParams(location.search).get('next');
+  return next && PAGINA_VALIDA.test(next) ? next : 'index.html';
 }
 
-export function renderLayout(active) {
+function irParaLogin() {
+  const atual = location.pathname.split('/').pop();
+  const next = PAGINA_VALIDA.test(atual) && atual !== 'index.html' ? `?next=${atual}` : '';
+  location.replace(`login.html${next}`);
+}
+
+// Protege a página: sem sessão, redireciona para o login.
+// Com sessão, monta o cabeçalho, mostra a página e devolve o usuário.
+export async function renderLayout(active) {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) {
+    irParaLogin();
+    return null;
+  }
+  const user = session.user;
+
   const nav = NAV.map((item) => {
     const current = item.id === active ? ' class="is-active" aria-current="page"' : '';
     return `<a href="${item.href}"${current}><svg class="icon"><use href="#i-${item.icon}"/></svg>${item.label}</a>`;
   }).join('');
 
-  document.body.insertAdjacentHTML('afterbegin', `${SPRITE}
+  insertIcons();
+  document.querySelector('svg').insertAdjacentHTML('afterend', `
     <header class="topbar">
       <div class="container topbar__inner">
         <a href="index.html" class="brand">
@@ -112,35 +95,20 @@ export function renderLayout(active) {
           <span class="brand__name">Boliche PMFC</span>
         </a>
         <nav class="nav" aria-label="Principal">${nav}</nav>
-        <div class="auth" id="auth-area"></div>
+        <div class="auth">
+          <span class="auth__email"></span>
+          <button type="button" class="btn btn--ghost btn--sm" id="btn-sair"><svg class="icon"><use href="#i-log-out"/></svg>Sair</button>
+        </div>
       </div>
     </header>`);
-  document.body.insertAdjacentHTML('beforeend', LOGIN_DIALOG);
 
-  loginDialog = document.getElementById('login-dialog');
-  setupDialog(loginDialog);
+  document.querySelector('.auth__email').textContent = user.email;
+  document.getElementById('btn-sair').addEventListener('click', () => supabase.auth.signOut());
 
-  const form = document.getElementById('login-form');
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    const submit = form.querySelector('[type="submit"]');
-    submit.disabled = true;
-    const { error } = await supabase.auth.signInWithPassword({
-      email: form.email.value.trim(),
-      password: form.password.value,
-    });
-    submit.disabled = false;
-    if (error) {
-      showFormError(form, error.message === 'Invalid login credentials' ? 'E-mail ou senha inválidos.' : error.message);
-      return;
-    }
-    loginDialog.close();
+  supabase.auth.onAuthStateChange((event) => {
+    if (event === 'SIGNED_OUT') location.replace('login.html');
   });
 
-  renderAuth();
-  supabase.auth.onAuthStateChange((_event, session) => {
-    currentUser = session?.user ?? null;
-    renderAuth();
-    listeners.forEach((fn) => fn(currentUser));
-  });
+  delete document.body.dataset.auth;
+  return user;
 }

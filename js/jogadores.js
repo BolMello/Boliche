@@ -1,13 +1,12 @@
 import { supabase } from './supabase.js';
-import { renderLayout, onAuthChange, openLogin, setupDialog, showFormError } from './layout.js';
+import { renderLayout, setupDialog, showFormError } from './layout.js';
 
-renderLayout('jogadores');
+const user = await renderLayout('jogadores');
 
 const state = {
   jogadores: [],
   filtro: 'todos',
   busca: '',
-  user: null,
   editandoId: null,
   carregado: false,
 };
@@ -84,27 +83,19 @@ function criarCard(jogador) {
   nome.textContent = jogador.nome;
   nome.title = jogador.nome;
 
-  card.append(badge, nome);
+  const acoes = document.createElement('div');
+  acoes.className = 'player__actions';
+  acoes.innerHTML = `
+    <button type="button" class="icon-btn" data-acao="editar" aria-label="Editar"><svg class="icon"><use href="#i-pencil"/></svg></button>
+    <button type="button" class="icon-btn icon-btn--danger" data-acao="excluir" aria-label="Excluir"><svg class="icon"><use href="#i-trash"/></svg></button>`;
+  acoes.querySelector('[data-acao="editar"]').addEventListener('click', () => abrirForm(jogador));
+  acoes.querySelector('[data-acao="excluir"]').addEventListener('click', () => excluir(jogador));
 
-  if (state.user) {
-    const acoes = document.createElement('div');
-    acoes.className = 'player__actions';
-    acoes.innerHTML = `
-      <button type="button" class="icon-btn" data-acao="editar" aria-label="Editar"><svg class="icon"><use href="#i-pencil"/></svg></button>
-      <button type="button" class="icon-btn icon-btn--danger" data-acao="excluir" aria-label="Excluir"><svg class="icon"><use href="#i-trash"/></svg></button>`;
-    acoes.querySelector('[data-acao="editar"]').addEventListener('click', () => abrirForm(jogador));
-    acoes.querySelector('[data-acao="excluir"]').addEventListener('click', () => excluir(jogador));
-    card.append(acoes);
-  }
-
+  card.append(badge, nome, acoes);
   return card;
 }
 
 function abrirForm(jogador = null) {
-  if (!state.user) {
-    openLogin();
-    return;
-  }
   state.editandoId = jogador?.id ?? null;
   el.dialogTitle.textContent = jogador ? 'Editar jogador' : 'Novo jogador';
   el.dialog.showModal();
@@ -147,31 +138,30 @@ async function excluir(jogador) {
   await carregar();
 }
 
-setupDialog(el.dialog);
-el.form.addEventListener('submit', salvar);
-el.btnNovo.addEventListener('click', () => abrirForm());
+function iniciar() {
+  setupDialog(el.dialog);
+  el.form.addEventListener('submit', salvar);
+  el.btnNovo.addEventListener('click', () => abrirForm());
 
-el.busca.addEventListener('input', () => {
-  state.busca = el.busca.value;
-  render();
-});
-
-el.filtros.forEach((botao) => {
-  botao.addEventListener('click', () => {
-    state.filtro = botao.dataset.filtro;
-    el.filtros.forEach((b) => {
-      const ativo = b === botao;
-      b.classList.toggle('is-active', ativo);
-      b.setAttribute('aria-pressed', ativo);
-    });
+  el.busca.addEventListener('input', () => {
+    state.busca = el.busca.value;
     render();
   });
-});
 
-// Mostra ou esconde editar/excluir conforme o login.
-onAuthChange((user) => {
-  state.user = user;
-  render();
-});
+  el.filtros.forEach((botao) => {
+    botao.addEventListener('click', () => {
+      state.filtro = botao.dataset.filtro;
+      el.filtros.forEach((b) => {
+        const ativo = b === botao;
+        b.classList.toggle('is-active', ativo);
+        b.setAttribute('aria-pressed', ativo);
+      });
+      render();
+    });
+  });
 
-carregar();
+  carregar();
+}
+
+// Sem login, renderLayout já redirecionou para login.html.
+if (user) iniciar();

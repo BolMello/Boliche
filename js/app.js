@@ -2,7 +2,7 @@ import { supabase } from './supabase.js';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
 import { renderLayout } from './layout.js';
 
-renderLayout('home');
+const user = await renderLayout('home');
 
 const statusEl = document.getElementById('db-status');
 
@@ -37,5 +37,7 @@ async function carregarTotais() {
   if (!error) document.getElementById('stat-jogadores').textContent = count ?? 0;
 }
 
-checkConnection();
-carregarTotais();
+if (user) {
+  checkConnection();
+  carregarTotais();
+}
