@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jogadores · Boliche PMFC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <main class="container page">
+    <div class="page-head">
+      <div class="page-head__title">
+        <span class="page-head__icon"><svg class="icon"><use href="#i-users"/></svg></span>
+        <div>
+          <h1 class="page-title">Jogadores</h1>
+          <p class="page-subtitle">Cadastro mestre de jogadores</p>
+        </div>
+      </div>
+      <button type="button" class="btn btn--primary" id="btn-novo"><svg class="icon"><use href="#i-plus"/></svg>Novo jogador</button>
+    </div>
+
+    <section class="counters" aria-label="Totais">
+      <div class="counter"><p class="counter__value counter__value--total" id="count-total">0</p><p class="counter__label">Total</p></div>
+      <div class="counter"><p class="counter__value counter__value--m" id="count-m">0</p><p class="counter__label">Masculino</p></div>
+      <div class="counter"><p class="counter__value counter__value--f" id="count-f">0</p><p class="counter__label">Feminino</p></div>
+    </section>
+
+    <div class="toolbar">
+      <label class="search">
+        <svg class="icon"><use href="#i-search"/></svg>
+        <input type="search" id="busca" placeholder="Buscar jogador..." aria-label="Buscar jogador" />
+      </label>
+      <div class="filters" role="group" aria-label="Filtrar por sexo">
+        <button type="button" class="chip is-active" data-filtro="todos" aria-pressed="true">Todos</button>
+        <button type="button" class="chip" data-filtro="Masculino" aria-pressed="false">Masculino</button>
+        <button type="button" class="chip" data-filtro="Feminino" aria-pressed="false">Feminino</button>
+      </div>
+    </div>
+
+    <p class="list-message" id="list-message">Carregando jogadores…</p>
+    <div class="players" id="players"></div>
+  </main>
+
+  <dialog class="modal" id="jogador-dialog" aria-labelledby="jogador-title">
+    <form class="modal__form" id="jogador-form" novalidate>
+      <div class="modal__head">
+        <h2 class="modal__title" id="jogador-title">Novo jogador</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Fechar"><svg class="icon"><use href="#i-x"/></svg></button>
+      </div>
+      <label class="field">
+        <span>Nome</span>
+        <input type="text" name="nome" maxlength="100" autocomplete="off" required />
+      </label>
+      <fieldset class="field">
+        <legend>Sexo</legend>
+        <div class="segmented">
+          <label><input type="radio" name="sexo" value="Masculino" required /><span>Masculino</span></label>
+          <label><input type="radio" name="sexo" value="Feminino" /><span>Feminino</span></label>
+        </div>
+      </fieldset>
+      <p class="form-error" hidden></p>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--ghost" data-close>Cancelar</button>
+        <button type="submit" class="btn btn--primary">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="js/jogadores.js"></script>
+</body>
+</html>

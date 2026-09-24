@@ -4,18 +4,61 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Boliche PMFC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
   <main class="container">
-    <h1>🎳 Boliche PMFC</h1>
-    <p class="subtitle">Estrutura inicial do app</p>
+    <section class="hero">
+      <div class="hero__content">
+        <p class="hero__eyebrow"><svg class="icon"><use href="#i-zap"/></svg>Plataforma de boliche</p>
+        <h1 class="hero__title">Boliche PMFC</h1>
+        <p class="hero__text">Gerencie campeonatos, registre pontuações e acompanhe a classificação em tempo real.</p>
+        <div class="hero__actions">
+          <a href="#campeonatos" class="btn btn--light"><svg class="icon"><use href="#i-trophy"/></svg>Ver campeonatos</a>
+          <a href="#ranking" class="btn btn--outline"><svg class="icon"><use href="#i-chart"/></svg>Classificação</a>
+        </div>
+      </div>
+      <svg class="hero__art" aria-hidden="true"><use href="#i-trophy"/></svg>
+    </section>
 
-    <section class="card">
-      <h2>Conexão com o banco</h2>
-      <p id="db-status" class="status status--pending">Verificando conexão com o Supabase…</p>
+    <section class="stats" aria-label="Resumo">
+      <div class="stat">
+        <span class="stat__icon stat__icon--accent"><svg class="icon"><use href="#i-trophy"/></svg></span>
+        <div><p class="stat__label">Campeonatos</p><p class="stat__value" id="stat-campeonatos">0</p></div>
+      </div>
+      <div class="stat">
+        <span class="stat__icon"><svg class="icon"><use href="#i-zap"/></svg></span>
+        <div><p class="stat__label">Ativos</p><p class="stat__value" id="stat-ativos">0</p></div>
+      </div>
+      <div class="stat">
+        <span class="stat__icon"><svg class="icon"><use href="#i-users"/></svg></span>
+        <div><p class="stat__label">Jogadores</p><p class="stat__value" id="stat-jogadores">0</p></div>
+      </div>
+      <div class="stat">
+        <span class="stat__icon"><svg class="icon"><use href="#i-target"/></svg></span>
+        <div><p class="stat__label">Games Lançados</p><p class="stat__value" id="stat-games">0</p></div>
+      </div>
+    </section>
+
+    <section class="recent" id="campeonatos">
+      <div class="section-head">
+        <h2 class="section-title">Campeonatos recentes</h2>
+        <a href="#campeonatos" class="link">Ver todos<svg class="icon"><use href="#i-arrow-right"/></svg></a>
+      </div>
+      <div class="empty">
+        <svg class="empty__icon" aria-hidden="true"><use href="#i-trophy"/></svg>
+        <p class="empty__text">Nenhum campeonato ainda</p>
+        <a href="#" class="btn btn--primary"><svg class="icon"><use href="#i-zap"/></svg>Criar primeiro</a>
+      </div>
     </section>
   </main>
+
+  <footer class="container footer">
+    <p id="db-status" class="status" data-state="pending">Verificando conexão…</p>
+  </footer>
 
   <script type="module" src="js/app.js"></script>
 </body>

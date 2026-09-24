@@ -1,11 +1,14 @@
 import { supabase } from './supabase.js';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
+import { renderLayout } from './layout.js';
+
+renderLayout('home');
 
 const statusEl = document.getElementById('db-status');
 
 function setStatus(message, state) {
   statusEl.textContent = message;
-  statusEl.className = `status status--${state}`;
+  statusEl.dataset.state = state;
 }
 
 // Testa a conexão sem depender de nenhuma tabela:
@@ -22,11 +25,17 @@ async function checkConnection() {
     const { error } = await supabase.auth.getSession();
     if (error) throw error;
 
-    setStatus('✅ Conectado ao Supabase', 'ok');
+    setStatus('Conectado ao Supabase', 'ok');
   } catch (err) {
     console.error('Falha ao conectar ao Supabase:', err);
-    setStatus(`❌ Falha ao conectar ao Supabase: ${err.message}`, 'error');
+    setStatus(`Falha ao conectar ao Supabase: ${err.message}`, 'error');
   }
 }
 
+async function carregarTotais() {
+  const { count, error } = await supabase.from('jogador').select('*', { count: 'exact', head: true });
+  if (!error) document.getElementById('stat-jogadores').textContent = count ?? 0;
+}
+
 checkConnection();
+carregarTotais();

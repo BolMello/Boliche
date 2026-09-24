@@ -20,6 +20,11 @@ js/app.js         Lógica da página (teste de conexão)
 
 A anon key é pública por design. Os dados ficam protegidos por **Row Level Security (RLS)**, que deve ser ativada em todas as tabelas quando elas forem criadas.
 
+## Usuários (login)
+
+Qualquer pessoa pode consultar os dados; cadastrar, editar e excluir exige login.
+Para criar um usuário: painel do Supabase → **Authentication → Users → Add user → Create new user**, informe e-mail e senha e marque **Auto Confirm User**.
+
 ## Rodar localmente
 
 Módulos ES não funcionam abrindo o arquivo direto (`file://`). Use um servidor local:
