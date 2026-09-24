@@ -1,6 +1,7 @@
 import { supabase } from './supabase.js';
 import { SUPABASE_URL, SUPABASE_ANON_KEY } from './config.js';
 import { renderLayout } from './layout.js';
+import { criarCardCampeonato } from './util.js';
 
 const user = await renderLayout('home');
 
@@ -32,12 +33,44 @@ async function checkConnection() {
   }
 }
 
+async function contar(tabela, filtrar = (q) => q) {
+  const { count, error } = await filtrar(supabase.from(tabela).select('*', { count: 'exact', head: true }));
+  return error ? null : count;
+}
+
 async function carregarTotais() {
-  const { count, error } = await supabase.from('jogador').select('*', { count: 'exact', head: true });
-  if (!error) document.getElementById('stat-jogadores').textContent = count ?? 0;
+  const [campeonatos, ativos, jogadores] = await Promise.all([
+    contar('campeonato'),
+    contar('campeonato', (q) => q.eq('status', 'Em andamento')),
+    contar('jogador'),
+  ]);
+  const mostrar = (id, valor) => {
+    if (valor !== null) document.getElementById(id).textContent = valor;
+  };
+  mostrar('stat-campeonatos', campeonatos);
+  mostrar('stat-ativos', ativos);
+  mostrar('stat-jogadores', jogadores);
+}
+
+async function carregarRecentes() {
+  const { data, error } = await supabase
+    .from('campeonato')
+    .select('id, descricao, ano, data_inicio, status')
+    .order('data_inicio', { ascending: false })
+    .limit(3);
+
+  const lista = document.getElementById('recent-list');
+  const vazio = document.getElementById('recent-empty');
+  if (!error && data.length) {
+    lista.replaceChildren(...data.map(criarCardCampeonato));
+    lista.hidden = false;
+  } else {
+    vazio.hidden = false;
+  }
 }
 
 if (user) {
   checkConnection();
   carregarTotais();
+  carregarRecentes();
 }

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Campeonatos · Boliche PMFC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-auth="pending">
+  <main class="container page">
+    <div class="page-head">
+      <div class="page-head__title">
+        <span class="page-head__icon"><svg class="icon"><use href="#i-trophy"/></svg></span>
+        <div>
+          <h1 class="page-title">Campeonatos</h1>
+          <p class="page-subtitle">Cadastro de campeonatos</p>
+        </div>
+      </div>
+      <button type="button" class="btn btn--primary" id="btn-novo"><svg class="icon"><use href="#i-plus"/></svg>Novo campeonato</button>
+    </div>
+
+    <section class="counters counters--4" aria-label="Totais">
+      <div class="counter"><p class="counter__value counter__value--total" id="count-total">0</p><p class="counter__label">Total</p></div>
+      <div class="counter"><p class="counter__value counter__value--planejado" id="count-planejado">0</p><p class="counter__label">Planejados</p></div>
+      <div class="counter"><p class="counter__value counter__value--andamento" id="count-andamento">0</p><p class="counter__label">Em andamento</p></div>
+      <div class="counter"><p class="counter__value counter__value--encerrado" id="count-encerrado">0</p><p class="counter__label">Encerrados</p></div>
+    </section>
+
+    <div class="toolbar">
+      <label class="search">
+        <svg class="icon"><use href="#i-search"/></svg>
+        <input type="search" id="busca" placeholder="Buscar campeonato..." aria-label="Buscar campeonato" />
+      </label>
+      <div class="filters" role="group" aria-label="Filtrar por status">
+        <button type="button" class="chip is-active" data-filtro="todos" aria-pressed="true">Todos</button>
+        <button type="button" class="chip" data-filtro="Planejado" aria-pressed="false">Planejado</button>
+        <button type="button" class="chip" data-filtro="Em andamento" aria-pressed="false">Em andamento</button>
+        <button type="button" class="chip" data-filtro="Encerrado" aria-pressed="false">Encerrado</button>
+      </div>
+    </div>
+
+    <p class="list-message" id="list-message">Carregando campeonatos…</p>
+    <div class="champs" id="champs"></div>
+  </main>
+
+  <dialog class="modal" id="campeonato-dialog" aria-labelledby="campeonato-title">
+    <form class="modal__form" id="campeonato-form" novalidate>
+      <div class="modal__head">
+        <h2 class="modal__title" id="campeonato-title">Novo campeonato</h2>
+        <button type="button" class="icon-btn" data-close aria-label="Fechar"><svg class="icon"><use href="#i-x"/></svg></button>
+      </div>
+      <label class="field">
+        <span>Descrição</span>
+        <input type="text" name="descricao" maxlength="120" autocomplete="off" required />
+      </label>
+      <div class="field-row">
+        <label class="field">
+          <span>Ano</span>
+          <input type="number" name="ano" min="2000" max="2100" step="1" required />
+        </label>
+        <label class="field">
+          <span>Data de início</span>
+          <input type="date" name="data_inicio" required />
+        </label>
+      </div>
+      <fieldset class="field">
+        <legend>Status</legend>
+        <div class="segmented">
+          <label><input type="radio" name="status" value="Planejado" required /><span>Planejado</span></label>
+          <label><input type="radio" name="status" value="Em andamento" /><span>Em andamento</span></label>
+          <label><input type="radio" name="status" value="Encerrado" /><span>Encerrado</span></label>
+        </div>
+      </fieldset>
+      <p class="form-error" hidden></p>
+      <div class="modal__actions">
+        <button type="button" class="btn btn--ghost" data-close>Cancelar</button>
+        <button type="submit" class="btn btn--primary">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script type="module" src="js/campeonatos.js"></script>
+</body>
+</html>

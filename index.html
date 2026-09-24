@@ -17,7 +17,7 @@
         <h1 class="hero__title">Boliche PMFC</h1>
         <p class="hero__text">Gerencie campeonatos, registre pontuações e acompanhe a classificação em tempo real.</p>
         <div class="hero__actions">
-          <a href="#campeonatos" class="btn btn--light"><svg class="icon"><use href="#i-trophy"/></svg>Ver campeonatos</a>
+          <a href="campeonatos.html" class="btn btn--light"><svg class="icon"><use href="#i-trophy"/></svg>Ver campeonatos</a>
           <a href="#ranking" class="btn btn--outline"><svg class="icon"><use href="#i-chart"/></svg>Classificação</a>
         </div>
       </div>
@@ -43,15 +43,16 @@
       </div>
     </section>
 
-    <section class="recent" id="campeonatos">
+    <section class="recent">
       <div class="section-head">
         <h2 class="section-title">Campeonatos recentes</h2>
-        <a href="#campeonatos" class="link">Ver todos<svg class="icon"><use href="#i-arrow-right"/></svg></a>
+        <a href="campeonatos.html" class="link">Ver todos<svg class="icon"><use href="#i-arrow-right"/></svg></a>
       </div>
-      <div class="empty">
+      <div class="champs" id="recent-list" hidden></div>
+      <div class="empty" id="recent-empty" hidden>
         <svg class="empty__icon" aria-hidden="true"><use href="#i-trophy"/></svg>
         <p class="empty__text">Nenhum campeonato ainda</p>
-        <a href="#" class="btn btn--primary"><svg class="icon"><use href="#i-zap"/></svg>Criar primeiro</a>
+        <a href="campeonatos.html?novo=1" class="btn btn--primary"><svg class="icon"><use href="#i-zap"/></svg>Criar primeiro</a>
       </div>
     </section>
   </main>

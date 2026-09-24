@@ -1,5 +1,6 @@
 import { supabase } from './supabase.js';
 import { renderLayout, setupDialog, showFormError } from './layout.js';
+import { normalizar } from './util.js';
 
 const user = await renderLayout('jogadores');
 
@@ -24,11 +25,6 @@ const el = {
   countM: document.getElementById('count-m'),
   countF: document.getElementById('count-f'),
 };
-
-// Remove acentos para a busca achar "Andre" em "André".
-function normalizar(texto) {
-  return texto.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-}
 
 function showMessage(text, kind = 'info') {
   el.message.textContent = text;

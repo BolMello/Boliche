@@ -22,6 +22,10 @@
   box-sizing: border-box;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 body {
   margin: 0;
   background: var(--bg);
@@ -518,6 +522,13 @@ p {
 .counter__value--total { color: var(--accent); }
 .counter__value--m { color: var(--male); }
 .counter__value--f { color: var(--female); }
+.counter__value--planejado { color: var(--pending); }
+.counter__value--andamento { color: var(--ok); }
+.counter__value--encerrado { color: var(--muted); }
+
+.counters--4 {
+  grid-template-columns: repeat(4, 1fr);
+}
 
 .counter__label {
   margin-top: 2px;
@@ -564,6 +575,7 @@ p {
 
 .filters {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
@@ -661,6 +673,104 @@ p {
   gap: 2px;
 }
 
+/* ---------- Campeonatos ---------- */
+.champs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+  padding-bottom: 16px;
+}
+
+.recent .champs {
+  margin-top: 0;
+}
+
+.champ {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 14px 16px 16px;
+  background: var(--surface);
+  border: 1px solid rgba(249, 115, 22, 0.45);
+  border-radius: 10px;
+  box-shadow: 0 0 14px rgba(249, 115, 22, 0.07);
+}
+
+.champ__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 28px;
+}
+
+.champ__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 1.3rem;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.champ__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.champ__meta > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.champ__meta .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-badge::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.status-badge--planejado {
+  background: rgba(210, 153, 34, 0.15);
+  color: var(--pending);
+}
+
+.status-badge--andamento {
+  background: rgba(63, 185, 80, 0.15);
+  color: var(--ok);
+}
+
+.status-badge--encerrado {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
 /* ---------- Popup (dialog) ---------- */
 .modal {
   width: min(440px, calc(100% - 32px));
@@ -721,9 +831,19 @@ p {
   margin-bottom: 0;
 }
 
+.field-row {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 12px;
+}
+
 .field input[type="text"],
 .field input[type="email"],
-.field input[type="password"] {
+.field input[type="password"],
+.field input[type="number"],
+.field input[type="date"] {
+  width: 100%;
+  min-width: 0;
   padding: 10px 12px;
   border: 1px solid var(--border);
   border-radius: 6px;
@@ -740,7 +860,8 @@ p {
 
 .segmented {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
   gap: 8px;
 }
 
@@ -881,7 +1002,8 @@ body[data-auth="pending"] {
   }
 
   .stats,
-  .players {
+  .players,
+  .champs {
     grid-template-columns: repeat(2, 1fr);
   }
 }
@@ -900,13 +1022,22 @@ body[data-auth="pending"] {
   }
 
   .stats,
-  .players {
+  .players,
+  .champs {
     grid-template-columns: 1fr;
     gap: 12px;
   }
 
   .counters {
     gap: 8px;
+  }
+
+  .counters--4 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .segmented {
+    grid-auto-flow: row;
   }
 
   .auth__email {
