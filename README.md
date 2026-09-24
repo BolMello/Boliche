@@ -22,7 +22,8 @@ A anon key é pública por design. Os dados ficam protegidos por **Row Level Sec
 
 ## Usuários (login)
 
-Qualquer pessoa pode consultar os dados; cadastrar, editar e excluir exige login.
+O app só pode ser acessado por usuários cadastrados: `login.html` é a porta de entrada e as demais páginas redirecionam para ela sem sessão. No banco, as tabelas não dão nenhum acesso ao papel `anon`, e o cadastro público está desligado (**Authentication → Sign In / Providers → Allow new users to sign up** desmarcado).
+
 Para criar um usuário: painel do Supabase → **Authentication → Users → Add user → Create new user**, informe e-mail e senha e marque **Auto Confirm User**.
 
 ## Rodar localmente
